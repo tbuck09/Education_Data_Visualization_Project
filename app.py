@@ -58,7 +58,8 @@ def serve_demo_math(db_request):
     else:
         return """
         <h1>Error:</h1>
-        <span>Invalid request</span>
+        <h3>Invalid request</h3>
+        <br>
         <span>Please make a request for a valid address</span>
         """
 
