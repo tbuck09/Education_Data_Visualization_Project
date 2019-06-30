@@ -38,7 +38,7 @@ def index():
     return render_template("index.html")
 
 
-';@app.route("/<db_request>", methods= ["GET"])
+@app.route("/<db_request>", methods= ["GET"])
 def serve_demo_math(db_request):
     print(f"Request made to {db_request}")
 
