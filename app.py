@@ -26,11 +26,6 @@ app.config["MONGO_URI"]= 'mongodb://localhost:27017/seda_ed_db'
 mongo= PyMongo(app)
 # mongo= PyMongo(app, uri= "mongodb://localhost:27017/seda_ed_db")
 
-demo_ela= mongo.db.demo_ela
-demo_math= mongo.db.demo_math
-all_ela= mongo.db.all_ela
-all_math= mongo.db.all_math
-
 
 ####################
 # Set Routes
