@@ -56,7 +56,11 @@ def serve_demo_math(db_request):
     elif db_request == "math_full":
         selected_db= math_full
     else:
-        return "Invalid request"
+        return """
+        <h1>Error:</h1>
+        <span>Invalid request</span>
+        <span>Please make a request for a valid address</span>
+        """
 
     output= []
 
