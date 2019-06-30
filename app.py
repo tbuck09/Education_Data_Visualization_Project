@@ -5,14 +5,9 @@
 import os
 from datetime import datetime
 
-from flask import Flask, render_template, redirect
+from flask import Flask, jsonify, render_template, redirect
 
-# from flask_pymongo import PyMongo
-
-# from flask_sqlalchemy import SQLAlchemy
-# from sqlalchemy.ext.automap import automap_base
-# from sqlalchemy.orm import Session
-# from sqlalchemy import create_engine, func
+from flask_pymongo import PyMongo
 
 
 ####################
@@ -21,23 +16,20 @@ from flask import Flask, render_template, redirect
 
 app= Flask(__name__)
 
+app.config['MONGO_DBNAME']= 'seda_ed_db'
+app.config["MONGO_URI"]= 'mongodb://localhost:27017/seda_ed_db'
 
 ####################
 # Initialize DB
 ####################
 
-# mongo= PyMongo(app, uri= "mongodb://localhost:27017/education_db")
+mongo= PyMongo(app)
+# mongo= PyMongo(app, uri= "mongodb://localhost:27017/seda_ed_db")
 
-
-# engine= create_engine("sqlite:///resources/education_db.sqlite")
-
-# Base= automap_base()
-# Base.prepare(engine, reflect= True)
-
-# Measurement= Base.classes.measurement
-# Station= Base.classes.station
-
-# session= Session(engine)
+demo_ela= mongo.db.demo_ela
+demo_math= mongo.db.demo_math
+all_ela= mongo.db.all_ela
+all_math= mongo.db.all_math
 
 
 ####################
@@ -51,5 +43,42 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/<db_request>", methods= ["GET"])
+def serve_demo_math(db_request):
+    print(f"Request made to {db_request}")
+
+    ela_demog= mongo.db.ela_demog
+    math_demog= mongo.db.math_demog
+    ela_full= mongo.db.ela_full
+    math_full= mongo.db.math_full
+    
+    if db_request == "ela_demog":
+        selected_db= ela_demog
+    elif db_request == "math_demog":
+        selected_db= math_demog
+    elif db_request == "ela_full":
+        selected_db= ela_full
+    elif db_request == "math_full":
+        selected_db= math_full
+    else:
+        return "Invalid request"
+
+    output= []
+
+    results= selected_db.find()
+
+    for result in results:
+        output.append({
+            "name": result["leaname"],
+            "state": result["stateabb"],
+            "grade": result["grade"],
+            "year": result["year"],
+            "subject": result["subject"],
+            "mean_score": result["mn_all"]
+        })
+
+    return jsonify(output)
+
+
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

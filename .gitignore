@@ -1,7 +1,3 @@
 .ipynb_checkpoints
-SEDA_geodist_long_CS_v21.csv
-SEDA_geodist_long_GCS_v21.csv
-SEDA_geodist_pool_CS_v21.csv
-SEDA_geodist_poolsub_CS_v21.csv
-SEDA_geodist_long_State_v21.csv
-SEDA_geodist_long_NAEP_v21.csv
+datasets
+__pycache__/
