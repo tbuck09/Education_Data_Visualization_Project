@@ -44,17 +44,17 @@ def serve_demo_math(db_request):
 
     ela_demog= mongo.db.ela_demog
     math_demog= mongo.db.math_demog
-    ela_full= mongo.db.ela_full
-    math_full= mongo.db.math_full
+    ela_2015= mongo.db.ela_2015
+    math_2015= mongo.db.math_2015
     
     if db_request == "ela_demog":
         selected_db= ela_demog
     elif db_request == "math_demog":
         selected_db= math_demog
-    elif db_request == "ela_full":
-        selected_db= ela_full
-    elif db_request == "math_full":
-        selected_db= math_full
+    elif db_request == "ela_2015":
+        selected_db= ela_2015
+    elif db_request == "math_2015":
+        selected_db= math_2015
     else:
         return """
         <h1>Error:</h1>
