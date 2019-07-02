@@ -29,9 +29,10 @@ db = client.seda_ed_db
 # demo_ela_df = pd.read_csv(r"resources\datasets\demo_ela.csv")
 # demo_math_df = pd.read_csv(r"resources\datasets\demo_math.csv")
 # merged_8_and_4_df= pd.read_csv(r"resources\datasets\merged_8_and_4.csv")
-ela2015_df= pd.read_csv(r"resources/ela_2015.csv")
-math2015_df= pd.read_csv(r"resources/math_2015.csv")
-
+ela_2013_df= pd.read_csv(r"resources/ela_2013.csv")
+math_2013_df= pd.read_csv(r"resources/math_2013.csv")
+ela_2013_agg_df= pd.read_csv(r"resources/ela_2013_agg.csv")
+math_2013_agg_df= pd.read_csv(r"resources/math_2013_agg.csv")
 
 
 # convert to dictionary and move to mongo as collections
@@ -41,5 +42,27 @@ math2015_df= pd.read_csv(r"resources/math_2015.csv")
 # db.ela_demog.insert_many(demo_ela_df.to_dict(orient= "records"))
 # db.math_demog.insert_many(demo_math_df.to_dict(orient= "records"))
 # db.grades_8_and_4.insert_many(merged_8_and_4_df.to_dict(orient= "records"))
-db.ela_2015.insert_many(ela2015_df.to_dict(orient= "records"))
-db.math_2015.insert_many(math2015_df.to_dict(orient= "records"))
+
+db_dict= [
+    {"db_name": "ela_2013", "collection": db.ela_2013, "db_df": ela_2013_df},
+    {"db_name": "math_2013", "collection": db.math_2013, "db_df": math_2013_df},
+    {"db_name": "ela_2013_agg", "collection": db.ela_2013_agg, "db_df": ela_2013_agg_df},
+    {"db_name": "math_2013_agg", "collection": db.math_2013_agg, "db_df": math_2013_agg_df}
+]
+    
+
+for dbase in db_dict:
+    if dbase["collection"].find().count() > 0:
+        # Drop redundant data
+        print(f"Dropping {dbase['db_name']}.")
+        dbase["collection"].drop()
+        # Insert to db
+        print(f"Inserting to {dbase['db_name']}.")
+        dbase["collection"].insert_many(dbase["db_df"].to_dict(orient= "records"))
+    elif dbase["collection"].find().count() == 0:
+        # Insert to db
+        print(f"Inserting to {dbase['db_name']}.")
+        dbase["collection"].insert_many(dbase["db_df"].to_dict(orient= "records"))
+    else:
+        # Something weird must've happened
+        print(f"{dbase['db_name']} is invalid.")
