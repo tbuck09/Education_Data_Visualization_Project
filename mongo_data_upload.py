@@ -29,8 +29,8 @@ db = client.seda_ed_db
 # demo_ela_df = pd.read_csv(r"resources\datasets\demo_ela.csv")
 # demo_math_df = pd.read_csv(r"resources\datasets\demo_math.csv")
 # merged_8_and_4_df= pd.read_csv(r"resources\datasets\merged_8_and_4.csv")
-ela2015_df= pd.read_csv(r"resources\datasets\ela_2015.csv")
-math2015_df= pd.read_csv(r"resources\datasets\math_2015.csv")
+ela2015_df= pd.read_csv(r"resources/ela_2015.csv")
+math2015_df= pd.read_csv(r"resources/math_2015.csv")
 
 
 
