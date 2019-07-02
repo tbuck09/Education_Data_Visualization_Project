@@ -1,10 +1,12 @@
 
+var selectedX
+var selectedY
+var url = `/${selectedSubject}`
 
-
-
-
-var schoolData = d3.json(url).then(function(response){
-
+d3.json(url).then(function(response){
+    console.log(response);
+    var x =response.selectedX
+    var y =response.selectedY
 })
 
 
