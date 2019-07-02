@@ -44,19 +44,24 @@ def serve_demo_math(db_request):
 
     ela_demog= mongo.db.ela_demog
     math_demog= mongo.db.math_demog
-    ela_full= mongo.db.ela_full
-    math_full= mongo.db.math_full
+    ela2015= mongo.db.ela2015
+    math2015= mongo.db.math2015
     
     if db_request == "ela_demog":
         selected_db= ela_demog
     elif db_request == "math_demog":
         selected_db= math_demog
-    elif db_request == "ela_full":
-        selected_db= ela_full
-    elif db_request == "math_full":
-        selected_db= math_full
+    elif db_request == "ela2015":
+        selected_db= ela2015
+    elif db_request == "math2015":
+        selected_db= math2015
     else:
-        return "Invalid request"
+        return """
+        <h1>Error:</h1>
+        <h3>Invalid request</h3>
+        <br>
+        <span>Please make a request for a valid address</span>
+        """
 
     output= []
 
