@@ -44,17 +44,23 @@ def serve_demo_math(db_request):
 
     ela_demog= mongo.db.ela_demog
     math_demog= mongo.db.math_demog
-    ela_2015= mongo.db.ela_2015
-    math_2015= mongo.db.math_2015
+    ela_2013= mongo.db.ela_2013
+    math_2013= mongo.db.math_2013
+    ela_2013_agg= mongo.db.ela_2013_agg
+    math_2013_agg= mongo.db.math_2013_agg
     
     if db_request == "ela_demog":
         selected_db= ela_demog
     elif db_request == "math_demog":
         selected_db= math_demog
-    elif db_request == "ela_2015":
-        selected_db= ela_2015
-    elif db_request == "math_2015":
-        selected_db= math_2015
+    elif db_request == "ela_2013":
+        selected_db= ela_2013
+    elif db_request == "math_2013":
+        selected_db= math_2013
+    elif db_request == "ela_2013_agg":
+        selected_db= ela_2013_agg
+    elif db_request == "math_2013_agg":
+        selected_db= math_2013_agg
     else:
         return """
         <h1>Error:</h1>
@@ -69,11 +75,8 @@ def serve_demo_math(db_request):
 
     for result in results:
         output.append({
-            "name": result["leaname"],
             "state": result["stateabb"],
             "grade": result["grade"],
-            "year": result["year"],
-            "subject": result["subject"],
             "mean_score": result["mn_all"]
         })
 
