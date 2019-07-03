@@ -75,14 +75,34 @@ def serve_demo_math(db_request):
                 "grade": result["grade"],
                 "year": result["year"],
                 "subject": result["subject"],
-                "mean_score": result["mn_all"]
+                "mean_score": result["mn_all"],
+                "mean_asian": result["mn_asn"],
+                "mean_black": result["mn_blk"],
+                "mean_female": result["mn_fem"],
+                "mean_hispanic": result["mn_hsp"],
+                "mean_male": result["mn_mal"],
+                "mean_white": result["mn_wht"],
+                "mean_w/b_gap": result["mn_wbg"],
+                "mean_w/a_gap": result["mn_wag"],
+                "mean_w/h_gap": result["mn_whg"],
+                "mean_m/f_gap": result["mn_mfg"]
             })
         except:
             output.append({
                 "state": result["stateabb"],
                 "grade": result["grade"],
                 "year": result["year"],
-                "mean_score": result["mn_all"]
+                "mean_score": result["mn_all"],
+                "mean_asian": result["mn_asn"],
+                "mean_black": result["mn_blk"],
+                "mean_female": result["mn_fem"],
+                "mean_hispanic": result["mn_hsp"],
+                "mean_male": result["mn_mal"],
+                "mean_white": result["mn_wht"],
+                "mean_w/b_gap": result["mn_wbg"],
+                "mean_w/a_gap": result["mn_wag"],
+                "mean_w/h_gap": result["mn_whg"],
+                "mean_m/f_gap": result["mn_mfg"]
             })
 
     return jsonify(output)
