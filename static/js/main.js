@@ -1,5 +1,5 @@
 function buildChart(subject_agg) {
-
+  
 var url = `/${subject_agg}`
 
 d3.json(url).then(function (response) {
@@ -38,4 +38,10 @@ var chart = c3.generate({
       }
     }
 });
+}
+function init() {
+
+  var selector = de.select("#selDataset")
+
+  d3.json()
 }
