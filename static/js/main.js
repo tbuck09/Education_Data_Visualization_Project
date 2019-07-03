@@ -1,14 +1,23 @@
+function buildChart(subject_agg) {
 
-var selectedX
-var selectedY
-var url = `/${selectedSubject}`
+var url = `/${subject_agg}`
 
-d3.json(url).then(function(response){
-    console.log(response);
-    var x =response.selectedX
-    var y =response.selectedY
+d3.json(url).then(function (response) {
+  console.log(response);
+  var all = response.mean_score
+  console.log(all)
+  var asian = response.mean_asian
+  var black = response.mean_black
+  var female = response.mean_female
+  var hispanic = response.mean_hispanic
+  var m_f_gap = response.mean_m_f_gap
+  var male = response.mean_female
+  var w_a_gap = response.mean_w_a_gap
+  var w_b_gap = response.mean_w_b_gap
+  var w_h_gap = response.mean_w_h_gap
+  var white = response.mean_white
+  var state = response.state
 })
-
 
 
 
@@ -29,3 +38,4 @@ var chart = c3.generate({
       }
     }
 });
+}

@@ -82,10 +82,10 @@ def serve_demo_math(db_request):
                 "mean_hispanic": result["mn_hsp"],
                 "mean_male": result["mn_mal"],
                 "mean_white": result["mn_wht"],
-                "mean_w/b_gap": result["mn_wbg"],
-                "mean_w/a_gap": result["mn_wag"],
-                "mean_w/h_gap": result["mn_whg"],
-                "mean_m/f_gap": result["mn_mfg"]
+                "mean_w_b_gap": result["mn_wbg"],
+                "mean_w_a_gap": result["mn_wag"],
+                "mean_w_h_gap": result["mn_whg"],
+                "mean_m_f_gap": result["mn_mfg"]
             })
         except:
             output.append({
@@ -99,14 +99,13 @@ def serve_demo_math(db_request):
                 "mean_hispanic": result["mn_hsp"],
                 "mean_male": result["mn_mal"],
                 "mean_white": result["mn_wht"],
-                "mean_w/b_gap": result["mn_wbg"],
-                "mean_w/a_gap": result["mn_wag"],
-                "mean_w/h_gap": result["mn_whg"],
-                "mean_m/f_gap": result["mn_mfg"]
+                "mean_w_b_gap": result["mn_wbg"],
+                "mean_w_a_gap": result["mn_wag"],
+                "mean_w_h_gap": result["mn_whg"],
+                "mean_m_f_gap": result["mn_mfg"]
             })
 
     return jsonify(output)
-
 
 if __name__ == "__main__":
     app.run(debug=True)
