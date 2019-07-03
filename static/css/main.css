@@ -3,4 +3,10 @@
     bottom: 10px;
     width: 100%;
     text-align: center;
-}
+};
+
+#report-card {
+    height: 500px;
+    width: 500px;
+    background: blue;
+};
