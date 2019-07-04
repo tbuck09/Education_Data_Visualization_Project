@@ -55,9 +55,15 @@ d3.json(`/${requested_db}`).then(edData => {
 
     $chartGroup.append("g")
 
-    function colorizer()
+    // function colorizer(score):
+    //     // Normalize score on 0 - 1 scale
+        
+    //     var r= 
+    //     var g= 
+    //     var b= 
 
-    var blockPadding= 5;
+
+    var blockPadding= 10;
 
     var gradeBlocks= $chartGroup.selectAll("rect")
         .data(edData)
@@ -66,7 +72,9 @@ d3.json(`/${requested_db}`).then(edData => {
         .filter(d=> {return d.grade == 3})
             .attr("x", d => $xLinearScale(d["mean_score"]))
             .attr("y", d => $yBandScale(d["state"]))
-            .attr("height", `${(height/51) - blockPadding}px`)
-            .attr("width", `${width/51}px`)
+            // .attr("height", `${(height/51) - blockPadding}px`)
+            // .attr("width", `${width/51}px`)
+            .attr("height", "20px")
+            .attr("width", "20px")
             .attr("padding-top", `${blockPadding}px`);
 });
