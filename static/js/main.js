@@ -1,11 +1,11 @@
 // var unzip = require('unzip-array');
 
-function buildChart(userSelect) {
+function buildChart(subjectSelection, gradeSelection) {
   var baseUrl = "http://127.0.0.1:5000"
-  var requestUrl = `/${userSelect}`
+  var requestUrl = `/${subjectSelection}/${gradeSelection}`
   var url = baseUrl + requestUrl
   d3.json(url).then(function (response) {
-    console.log(response);
+    // console.log(response);
     var all = ["All"]
     var asian = ["Asian"]
     var black = ["Black"]
@@ -21,7 +21,7 @@ function buildChart(userSelect) {
     var grade = ["Grade"]
     Object.values(response).forEach((datum) => {
       all.push(datum.mean_score)
-      console.log(all)
+      // console.log(all)
       asian.push(datum.mean_asian)
       black.push(datum.mean_black)
       female.push(datum.mean_female)
@@ -35,8 +35,8 @@ function buildChart(userSelect) {
       state.push(datum.state)
       grade.push(datum.grade)
     })
-    console.log(state)
-    console.log(asian)
+    // console.log(state)
+    // console.log(asian)
     var full = [
       state,
       white,
@@ -109,8 +109,10 @@ function init() {
       .property("value", grade)
   })
 const firstSubject = subjects[Object.keys(subjects)[0]];
-console.log(firstSubject)
-buildChart(firstSubject);
+const firstGrade = grades[0];
+// console.log(firstSubject)
+buildChart(firstSubject, firstGrade);
+
 
 };
 
@@ -124,9 +126,18 @@ buildChart(firstSubject);
 
 
 
-function optionChanged(newSelection) {
-  buildChart(newSelection);
+function subOptionChanged(newSelection) {
+  var staticSelection = document.getElementById("selGrade").value
+  console.log(staticSelection)
+  buildChart(newSelection, staticSelection);
 }
+
+function gradeOptionChanged(newSelection) {
+  var staticSelection = document.getElementById("selSubject").value
+  console.log(staticSelection)
+  buildChart(staticSelection, newSelection);
+}
+
 
 init();
 
