@@ -51,8 +51,8 @@ db = client.seda_ed_db
 # demo_ela_df = pd.read_csv(r"resources\datasets\demo_ela.csv")
 # demo_math_df = pd.read_csv(r"resources\datasets\demo_math.csv")
 # merged_8_and_4_df= pd.read_csv(r"resources\datasets\merged_8_and_4.csv")
-ela_2013_df= pd.read_csv(r"resources/ela_2013.csv")
-math_2013_df= pd.read_csv(r"resources/math_2013.csv")
+ela_2013_state_agg_df= pd.read_csv(r"resources/ela_2013_state_agg.csv")
+math_2013_state_agg_df= pd.read_csv(r"resources/math_2013_state_agg.csv")
 ela_2013_agg_df= pd.read_csv(r"resources/ela_2013_agg.csv")
 math_2013_agg_df= pd.read_csv(r"resources/math_2013_agg.csv")
 
@@ -66,8 +66,8 @@ math_2013_agg_df= pd.read_csv(r"resources/math_2013_agg.csv")
 # db.grades_8_and_4.insert_many(merged_8_and_4_df.to_dict(orient= "records"))
 
 db_dict= [
-    {"db_name": "ela_2013", "collection": db.ela_2013, "db_df": ela_2013_df},
-    {"db_name": "math_2013", "collection": db.math_2013, "db_df": math_2013_df},
+    {"db_name": "ela_2013_state_agg", "collection": db.ela_2013_state_agg, "db_df": ela_2013_state_agg_df},
+    {"db_name": "math_2013_state_agg", "collection": db.math_2013_state_agg, "db_df": math_2013_state_agg_df},
     {"db_name": "ela_2013_agg", "collection": db.ela_2013_agg, "db_df": ela_2013_agg_df},
     {"db_name": "math_2013_agg", "collection": db.math_2013_agg, "db_df": math_2013_agg_df}
 ]
