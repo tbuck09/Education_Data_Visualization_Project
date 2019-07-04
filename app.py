@@ -195,7 +195,10 @@ def serve_demo_math(db_request):
             "state": result["stateabb"],
             "grade": result["grade"],
             "mean_score": result["mn_all"],
-            "mean_black": result["mn_blk"]
+            "mean_black": result["mn_blk"],
+            "mean_asian": result["mn_asn"],
+            "mean_hispanic": result["mn_hsp"],
+            "mean_white": result["mn_wht"]
         })
 
     return jsonify(output)
