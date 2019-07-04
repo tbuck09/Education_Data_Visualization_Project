@@ -3,8 +3,8 @@ requested_db= "ela_2013_agg"
 
 console.log(`${url}/${requested_db}`)
 
-var height= 1000;
-var width= 1000;
+var height= 500;
+var width= 500;
 
 d3.json(`/${requested_db}`).then(edData => {
     console.log(edData);
@@ -17,7 +17,6 @@ d3.json(`/${requested_db}`).then(edData => {
     edData.forEach(gradeAndState => {
         if (gradeAndState.grade == 3) {
             {
-
                 grade3MeanScores.push(gradeAndState.mean_score)
             }
         };
@@ -56,6 +55,10 @@ d3.json(`/${requested_db}`).then(edData => {
 
     $chartGroup.append("g")
 
+    function colorizer()
+
+    var blockPadding= 5;
+
     var gradeBlocks= $chartGroup.selectAll("rect")
         .data(edData)
         .enter()
@@ -63,6 +66,7 @@ d3.json(`/${requested_db}`).then(edData => {
         .filter(d=> {return d.grade == 3})
             .attr("x", d => $xLinearScale(d["mean_score"]))
             .attr("y", d => $yBandScale(d["state"]))
-            .attr("height", `${height/51}px`)
-            .attr("width", `${width/51}px`);
+            .attr("height", `${(height/51) - blockPadding}px`)
+            .attr("width", `${width/51}px`)
+            .attr("padding-top", `${blockPadding}px`);
 });
