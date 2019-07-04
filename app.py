@@ -41,26 +41,32 @@ def index():
 @app.route("/<db_request>", methods= ["GET"])
 def serve_demo_math(db_request):
     print(f"Request made to {db_request}")
+    print(f"testing {db_request}")
 
-    ela_demog= mongo.db.ela_demog
-    math_demog= mongo.db.math_demog
-    ela_2013= mongo.db.ela_2013
-    math_2013= mongo.db.math_2013
-    ela_2013_agg= mongo.db.ela_2013_agg
-    math_2013_agg= mongo.db.math_2013_agg
+    collections= mongo.db.collection_names()
+
+    # ela_demog= mongo.db.ela_demog
+    # math_demog= mongo.db.math_demog
+    # ela_2013= mongo.db.ela_2013
+    # math_2013= mongo.db.math_2013
+    # ela_2013_agg= mongo.db.ela_2013_agg
+    # math_2013_agg= mongo.db.math_2013_agg
     
-    if db_request == "ela_demog":
-        selected_db= ela_demog
-    elif db_request == "math_demog":
-        selected_db= math_demog
-    elif db_request == "ela_2013":
-        selected_db= ela_2013
-    elif db_request == "math_2013":
-        selected_db= math_2013
-    elif db_request == "ela_2013_agg":
-        selected_db= ela_2013_agg
-    elif db_request == "math_2013_agg":
-        selected_db= math_2013_agg
+    # if db_request == "ela_demog":
+    #     selected_db= ela_demog
+    # elif db_request == "math_demog":
+    #     selected_db= math_demog
+    # elif db_request == "ela_2013":
+    #     selected_db= ela_2013
+    # elif db_request == "math_2013":
+    #     selected_db= math_2013
+    # elif db_request == "ela_2013_agg":
+    #     selected_db= ela_2013_agg
+    # elif db_request == "math_2013_agg":
+    #     selected_db= math_2013_agg
+
+    if db_request in collections:
+        selected_db= mongo.db[db_request]
     else:
         return """
         <h1>Error:</h1>

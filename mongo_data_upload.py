@@ -33,6 +33,8 @@ ela_2013_df= pd.read_csv(r"resources/ela_2013.csv")
 math_2013_df= pd.read_csv(r"resources/math_2013.csv")
 ela_2013_agg_df= pd.read_csv(r"resources/ela_2013_agg.csv")
 math_2013_agg_df= pd.read_csv(r"resources/math_2013_agg.csv")
+ela_2013_state_agg_df= pd.read_csv(r"resources/ela_2013_state_agg.csv")
+math_2013_state_agg_df= pd.read_csv(r"resources/math_2013_state_agg.csv")
 
 
 # convert to dictionary and move to mongo as collections
@@ -47,7 +49,9 @@ db_dict= [
     {"db_name": "ela_2013", "collection": db.ela_2013, "db_df": ela_2013_df},
     {"db_name": "math_2013", "collection": db.math_2013, "db_df": math_2013_df},
     {"db_name": "ela_2013_agg", "collection": db.ela_2013_agg, "db_df": ela_2013_agg_df},
-    {"db_name": "math_2013_agg", "collection": db.math_2013_agg, "db_df": math_2013_agg_df}
+    {"db_name": "math_2013_agg", "collection": db.math_2013_agg, "db_df": math_2013_agg_df},
+    {"db_name": "ela_2013_state_agg", "collection": db.ela_2013_state_agg, "db_df": ela_2013_state_agg_df},
+    {"db_name": "math_2013_state_agg", "collection": db.math_2013_state_agg, "db_df": math_2013_state_agg_df}
 ]
     
 
