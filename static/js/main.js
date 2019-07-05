@@ -37,7 +37,7 @@ function buildChart(subjectSelection, gradeSelection) {
     })
     // console.log(state)
     // console.log(asian)
-    var full = [
+    var demographics = [
       state,
       white,
       black,
@@ -45,6 +45,12 @@ function buildChart(subjectSelection, gradeSelection) {
       asian
     ]
 
+    var demoColors = {
+      White: "#003f5c",
+      Black: "#7a5195",
+      Hispanic: "#ef5675",
+      Asian: "#ffa600"
+    }
 
     var chart = c3.generate({
       bindto: '#chart',
@@ -54,8 +60,9 @@ function buildChart(subjectSelection, gradeSelection) {
       },
       data: {
         x: "State",
-        columns: full,
-        type: "bar"
+        columns: demographics,
+        type: "bar",
+        colors: demoColors,
 
       },
       subchart: {
@@ -94,6 +101,7 @@ function init() {
   }
   var gradeSelector = d3.select("#selGrade")
   var grades = ["3", "4", "5", "6", "7", "8"]
+  var sex = ["All", "Male"]
 
   Object.entries(subjects).forEach(([subject, value]) => {
     subSelector
@@ -127,17 +135,20 @@ buildChart(firstSubject, firstGrade);
 
 
 function subOptionChanged(newSelection) {
-  var staticSelection = document.getElementById("selGrade").value
-  console.log(staticSelection)
-  buildChart(newSelection, staticSelection);
+  var staticGradeSelection = document.getElementById("selGrade").value
+  console.log(staticGradeSelection)
+  buildChart(newSelection, staticGradeSelection);
 }
 
 function gradeOptionChanged(newSelection) {
-  var staticSelection = document.getElementById("selSubject").value
-  console.log(staticSelection)
-  buildChart(staticSelection, newSelection);
+  var staticSubSelection = document.getElementById("selSubject").value
+  console.log(staticSubSelection)
+  buildChart(staticSubSelection, newSelection);
 }
 
+// function sexOptionChanged(newSelection) {
+
+// }
 
 init();
 
