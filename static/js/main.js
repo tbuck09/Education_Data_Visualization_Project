@@ -1,4 +1,4 @@
-// var unzip = require('unzip-array');
+
 
 function buildChart(subjectSelection, gradeSelection) {
   var baseUrl = "http://127.0.0.1:5000"
@@ -91,7 +91,77 @@ function buildChart(subjectSelection, gradeSelection) {
 
 }
 
+function buildMFChart(subjectSelection, gradeSelection) {
+  var baseUrl = "http://127.0.0.1:5000"
+  var requestUrl = `/${subjectSelection}/${gradeSelection}`
+  var url = baseUrl + requestUrl
+  d3.json(url).then(function (response) {
+    // console.log(response);
+    var all = ["All"]
+    var female = ["Female"]
+    var male = ["Male"]
+    var state = ["State"]
+    var grade = ["Grade"]
+    Object.values(response).forEach((datum) => {
+      all.push(datum.mean_score)
+      // console.log(all)
+      female.push(datum.mean_female)
+      male.push(datum.mean_male)
+      state.push(datum.state)
+      grade.push(datum.grade)
+    })
+    // console.log(state)
+    // console.log(asian)
+    var sex = [
+      state,
+      male,
+      female
+    ]
 
+    var sexColors = {
+      Female: "#FF8C00",
+      Male: "#808080",
+
+    }
+
+    var chart = c3.generate({
+      bindto: '#chart',
+      size: {
+        height: 500,
+        width: 1000
+      },
+      data: {
+        x: "State",
+        columns: sex,
+        type: "bar",
+        colors: sexColors,
+
+      },
+      subchart: {
+        show: true
+      },
+      width: {
+        ratio: 0.8
+      },
+      axis: {
+        x: {
+          type: "category",
+
+        }
+      },
+      zoom: {
+        enabled: true,
+        initialRange: [-1, 5]
+      }
+      // bar: {
+      //     width: {
+      //         ratio: 0.5
+      //     }
+      // }
+    });
+  })
+
+}
 function init() {
 
   var subSelector = d3.select("#selSubject")
@@ -101,7 +171,19 @@ function init() {
   }
   var gradeSelector = d3.select("#selGrade")
   var grades = ["3", "4", "5", "6", "7", "8"]
-  var sex = ["All", "Male"]
+  var sex = [
+    "All",
+    "Male/Female"
+  ]
+
+  var sexSelector = d3.select("#selSex")
+  sex.forEach(sex => {
+    sexSelector
+      .append("option")
+      .text(sex)
+      .property("value", sex)
+
+  })
 
   Object.entries(subjects).forEach(([subject, value]) => {
     subSelector
@@ -116,10 +198,10 @@ function init() {
       .text(grade)
       .property("value", grade)
   })
-const firstSubject = subjects[Object.keys(subjects)[0]];
-const firstGrade = grades[0];
-// console.log(firstSubject)
-buildChart(firstSubject, firstGrade);
+  const firstSubject = subjects[Object.keys(subjects)[0]];
+  const firstGrade = grades[0];
+  // console.log(firstSubject)
+  buildChart(firstSubject, firstGrade);
 
 
 };
@@ -136,19 +218,40 @@ buildChart(firstSubject, firstGrade);
 
 function subOptionChanged(newSelection) {
   var staticGradeSelection = document.getElementById("selGrade").value
+  var staticSexSelection = document.getElementById("selSex").value
   console.log(staticGradeSelection)
-  buildChart(newSelection, staticGradeSelection);
+  // buildChart(newSelection, staticGradeSelection);
+  if (document.getElementById("selSex").value == "All") {
+    buildChart(newSelection, staticGradeSelection)
+  }
+  else {
+    buildMFChart(newSelection, staticGradeSelection, staticSexSelection)
+  }
 }
 
 function gradeOptionChanged(newSelection) {
   var staticSubSelection = document.getElementById("selSubject").value
   console.log(staticSubSelection)
-  buildChart(staticSubSelection, newSelection);
+  var staticSexSelection = document.getElementById("selSex").value
+  // buildChart(staticSubSelection, newSelection);
+  if (document.getElementById("selSex").value == "All") {
+    buildChart(staticSubSelection, newSelection)
+  }
+  else {
+    buildMFChart(staticSubSelection, newSelection, staticSexSelection)
+  }
 }
 
-// function sexOptionChanged(newSelection) {
-
-// }
+function sexOptionChanged(newSelection) {
+  var staticSubSelection = document.getElementById("selSubject").value
+  var staticGradeSelection = document.getElementById("selGrade").value
+  if (document.getElementById("selSex").value == "All") {
+    buildChart(staticSubSelection, staticGradeSelection)
+  }
+  else {
+    buildMFChart(staticSubSelection, staticGradeSelection, newSelection)
+  }
+}
 
 init();
 
