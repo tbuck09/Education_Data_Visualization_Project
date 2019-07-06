@@ -1,6 +1,8 @@
 
+var zoomRange = [-1.0, 5.0]
 
-function buildChart(subjectSelection, gradeSelection) {
+function buildChart(subjectSelection, gradeSelection, zoom) {
+  zoom = zoomRange
   var baseUrl = "http://127.0.0.1:5000"
   var requestUrl = `/${subjectSelection}/${gradeSelection}`
   var url = baseUrl + requestUrl
@@ -66,7 +68,13 @@ function buildChart(subjectSelection, gradeSelection) {
 
       },
       subchart: {
-        show: true
+        show: true,
+        onbrush: function(domain) {
+          // console.log(domain)
+          zoomRange = domain
+          console.log(zoomRange)
+          // return zoomRange
+        }
       },
       width: {
         ratio: 0.8
@@ -79,22 +87,29 @@ function buildChart(subjectSelection, gradeSelection) {
       },
       zoom: {
         enabled: true,
-        initialRange: [-1, 5]
+        initialRange: zoomRange //[-1, 5]
       }
       // bar: {
       //     width: {
       //         ratio: 0.5
       //     }
       // }
+      
     });
+    console.log(zoomRange)
+    // return zoomRange
   })
-
+  console.log(zoomRange)
+  // return zoomRange
+  
 }
 
-function buildMFChart(subjectSelection, gradeSelection) {
+function buildMFChart(subjectSelection, gradeSelection, zoom) {
+  zoom = zoomRange
   var baseUrl = "http://127.0.0.1:5000"
   var requestUrl = `/${subjectSelection}/${gradeSelection}`
   var url = baseUrl + requestUrl
+  
   d3.json(url).then(function (response) {
     // console.log(response);
     var all = ["All"]
@@ -138,7 +153,11 @@ function buildMFChart(subjectSelection, gradeSelection) {
 
       },
       subchart: {
-        show: true
+        show: true,
+        onbrush: function(domain) {
+          zoomRange = domain
+          // return zoomRange
+        }
       },
       width: {
         ratio: 0.8
@@ -151,7 +170,7 @@ function buildMFChart(subjectSelection, gradeSelection) {
       },
       zoom: {
         enabled: true,
-        initialRange: [-1, 5]
+        initialRange: zoomRange
       }
       // bar: {
       //     width: {
@@ -159,8 +178,9 @@ function buildMFChart(subjectSelection, gradeSelection) {
       //     }
       // }
     });
+    // return zoomRange
   })
-
+  // return zoomRange
 }
 function init() {
 
@@ -198,10 +218,11 @@ function init() {
       .text(grade)
       .property("value", grade)
   })
+  
   const firstSubject = subjects[Object.keys(subjects)[0]];
   const firstGrade = grades[0];
   // console.log(firstSubject)
-  buildChart(firstSubject, firstGrade);
+  buildChart(firstSubject, firstGrade, zoomRange);
 
 
 };
@@ -216,40 +237,44 @@ function init() {
 
 
 
-function subOptionChanged(newSelection) {
+function subOptionChanged(newSelection, zoom) {
   var staticGradeSelection = document.getElementById("selGrade").value
   var staticSexSelection = document.getElementById("selSex").value
   console.log(staticGradeSelection)
   // buildChart(newSelection, staticGradeSelection);
+  zoom = zoomRange
   if (document.getElementById("selSex").value == "All") {
-    buildChart(newSelection, staticGradeSelection)
+    buildChart(newSelection, staticGradeSelection, zoom)
   }
   else {
-    buildMFChart(newSelection, staticGradeSelection, staticSexSelection)
+    buildMFChart(newSelection, staticGradeSelection, staticSexSelection, zoom)
   }
 }
 
-function gradeOptionChanged(newSelection) {
+function gradeOptionChanged(newSelection, zoom) {
   var staticSubSelection = document.getElementById("selSubject").value
   console.log(staticSubSelection)
   var staticSexSelection = document.getElementById("selSex").value
   // buildChart(staticSubSelection, newSelection);
+  zoom = zoomRange
+  console.log(zoom)
   if (document.getElementById("selSex").value == "All") {
-    buildChart(staticSubSelection, newSelection)
+    buildChart(staticSubSelection, newSelection, zoom)
   }
   else {
-    buildMFChart(staticSubSelection, newSelection, staticSexSelection)
+    buildMFChart(staticSubSelection, newSelection, staticSexSelection, zoom)
   }
 }
 
-function sexOptionChanged(newSelection) {
+function sexOptionChanged(newSelection, zoom) {
   var staticSubSelection = document.getElementById("selSubject").value
   var staticGradeSelection = document.getElementById("selGrade").value
+  zoom = zoomRange
   if (document.getElementById("selSex").value == "All") {
-    buildChart(staticSubSelection, staticGradeSelection)
+    buildChart(staticSubSelection, staticGradeSelection, zoom)
   }
   else {
-    buildMFChart(staticSubSelection, staticGradeSelection, newSelection)
+    buildMFChart(staticSubSelection, staticGradeSelection, newSelection, zoom)
   }
 }
 
