@@ -14,29 +14,15 @@ The data is being served using Flask v 1.0.2
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+User will need a version of MongoDB to host data collections.
 
-### Prerequisites
-
-
-```
-Give examples
-```
-
-
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
+### Deployment (tentatively for Heroku)
 
 ## Built With
 
 * [C3](https://github.com/c3js/c3/releases/tag/v0.7.2) - The visualization library used
 * [MongoDB](https://www.mongodb.com/download-center/community) - NoSQL database
-* 
-
-## Contributing
-
+* [Flask] (http://flask.pocoo.org/) - Server
 
 ## Versioning
 
