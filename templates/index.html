@@ -9,31 +9,37 @@
 </head>
 
 <body>
-    <h1>Welcome to the Education Data Dashboard!</h1>
-    <div class="row">
-        <div id="chart"
-             class="col-md-7"></div>
-        <div id="report-card"
-             class= "col-md-5"></div>
+    <div class="welcome">
+        <h1>Welcome to the NAEP 2013 Data Dashboard!</h1>
     </div>
-
     <div class="row">
-        <div class="col-md-4">
-            <div class="well">
-                <h5>Select Subject:</h5>
-                <select id="selSubject"
-                        onchange="subOptionChanged(this.value)"></select>
-                <h5>Select Grade:</h5>
-                <select id="selGrade"
-                        onchange="gradeOptionChanged(this.value)"></select>
-                <h5>Select Sex:</h5>
-                <select id="selSex"
-                        onchange="sexOptionChanged(this.value)"></select>
+        <div class="col-md-7">
+            <div class="row">
+                <div id="chart"></div>
+                <div class="well">
+                    <div class="well col-md-4">
+                        <h5>Select Subject:</h5>
+                        <select id="selSubject"
+                                onchange="subOptionChanged(this.value)"></select>
+                    </div>
+                    <div class="well col-md-4">
+                        <h5>Select Grade:</h5>
+                        <select id="selGrade"
+                                onchange="gradeOptionChanged(this.value)"></select>
+                    </div>
+                    <div class="well col-md-4">
+                        <h5>Select Sex:</h5>
+                        <select id="selSex"
+                                onchange="sexOptionChanged(this.value)"></select>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div id="report-card"
+             class= "col-md-5">
+        </div>
     </div>
 
-        <!-- <p> Stuff goes here</p> -->
-    </div>
     <div class="row bottom-bar">
         <span class="producers">Produced by Stew LaPan and Tyler Buck</span>
     </div>

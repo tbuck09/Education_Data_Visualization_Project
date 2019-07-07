@@ -1,9 +1,9 @@
 // Height and Width to be determined upon integration with the rest of the code
-var divHeight= 400
+var divHeight= 600
 var divWidth= 400
 
 var svgHeight= 1200;
-var svgWidth= divWidth * .85;
+var svgWidth= divWidth * .8 + 40;
 
 var chartOffsetX= 40
 var chartOffsetY= 40
@@ -18,6 +18,19 @@ d3.select("#report-card")
         background: #eaeac8;
         border-radius:5em;
     `)
+    .attr("onscroll", "getScrollPosition()");
+
+// Function to get scrollTop in order to return to previous position after load
+function getScrollPosition() {
+    var scrollTarget= document.getElementById("report-card")
+    console.log(scrollTarget.scrollTop);
+    sessionStorage.setItem("scrollTop",scrollTarget.scrollTop);
+}
+// Function to return to scroll position on reload
+function returnToScrollPosition() {
+    var scrollTarget= document.getElementById("report-card")
+    scrollTarget.scrollTo(0,sessionStorage.scrollTop);
+}
 
 
 /*
@@ -49,7 +62,7 @@ function getGradeData(edData,requestedGrade) {
 // Function to assign color to value based on Normalized (0-1) mean value
 function colorizer(gradeData,score) {
     // normalize score on 0-1 scale
-    var scoreNorm= (score - gradeData["meanOfGradeMeans"])/gradeData["stdevOfGradeMeans"];
+    var scoreNorm= (score - gradeData["extent"][0])/(gradeData["extent"][1] - gradeData["extent"][0]);
     // return rgb(${r},${g},${b})
     var r= 255 - (scoreNorm * 205)
     var g= 0 + (scoreNorm * 50)
@@ -75,8 +88,10 @@ function blockDimension(gradeData) {
 function reportCard(requested_db,requestedGrade) {
 
     // If there is a Report Card already, remove it and make a new one
-    d3.select("#report-card-title").remove()
-    d3.select("#report-card-svg").remove()
+    d3.select("#report-card-title").remove();
+    d3.select("#report-card-svg").remove();
+
+    returnToScrollPosition();
 
     d3.json(`/${requested_db}`).then(edData => {
         console.log(edData);
@@ -108,13 +123,6 @@ function reportCard(requested_db,requestedGrade) {
         var $svgTitle= d3.select("#report-card")
             .append("svg")
             .attr("id","report-card-title")
-        
-        // var titleRect= $svgTitle
-        //     .append("rect")
-        //     .attr("height","100px")
-        //     .attr("width",`${svgWidth}px`)
-        //     .attr("x","0")
-        //     .attr("y","0")
         
         var titleA= $svgTitle
             .append("text")
@@ -156,22 +164,13 @@ function reportCard(requested_db,requestedGrade) {
         var $xLinearScale= d3.scaleLinear()
             .domain([
                 gradeData["extent"][0] - 5,
-                gradeData["extent"][1] + 5
+                gradeData["extent"][1] + 15
             ])
             .range([0,svgWidth]);
         
         var $yBandScale= d3.scaleBand()
             .domain(['a'].concat(gradeData["state"]))
             .range([svgHeight-50,0])
-
-
-        // var testXLinearScale= []
-        // function testXLinear() {
-        //     testXLinearScale.push($xLinearScale())
-        // }
-        // testXLinear()
-        // console.log(testXLinearScale)
-
 
         var $bottomAxis= d3
             .axisBottom($xLinearScale);
@@ -212,7 +211,7 @@ function reportCard(requested_db,requestedGrade) {
             .enter()
             .append("rect")
             .filter(d=> {return d.grade == requestedGrade})
-                .attr("x", d => $xLinearScale(d["mean_score"]) + 40)
+                .attr("x", d => $xLinearScale(d["mean_score"]) + 30)
                 .attr("y", d => $yBandScale(d["state"]))
                 .attr("height", blockDim["height"].toString())
                 .attr("width", blockDim["width"].toString())
