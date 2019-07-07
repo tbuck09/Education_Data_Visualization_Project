@@ -24,10 +24,6 @@ User will need a version of MongoDB to host data collections.
 * [MongoDB](https://www.mongodb.com/download-center/community) - NoSQL database
 * [Flask](http://flask.pocoo.org/) - Server
 
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
 ## Authors
 
 * **Tyler Buck** - *Exploratory data analysis, Flask server, report card visualization* - [tbuck09](https://github.com/tbuck09)
