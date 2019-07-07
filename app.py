@@ -24,7 +24,6 @@ app.config["MONGO_URI"]= 'mongodb://localhost:27017/seda_ed_db'
 ####################
 
 mongo= PyMongo(app)
-# mongo= PyMongo(app, uri= "mongodb://localhost:27017/seda_ed_db")
 
 
 ####################
@@ -45,26 +44,6 @@ def serve_demo_math(db_request):
 
     collections= mongo.db.collection_names()
 
-    # ela_demog= mongo.db.ela_demog
-    # math_demog= mongo.db.math_demog
-    # ela_2013= mongo.db.ela_2013
-    # math_2013= mongo.db.math_2013
-    # ela_2013_agg= mongo.db.ela_2013_agg
-    # math_2013_agg= mongo.db.math_2013_agg
-    
-    # if db_request == "ela_demog":
-    #     selected_db= ela_demog
-    # elif db_request == "math_demog":
-    #     selected_db= math_demog
-    # elif db_request == "ela_2013":
-    #     selected_db= ela_2013
-    # elif db_request == "math_2013":
-    #     selected_db= math_2013
-    # elif db_request == "ela_2013_agg":
-    #     selected_db= ela_2013_agg
-    # elif db_request == "math_2013_agg":
-    #     selected_db= math_2013_agg
-
     if db_request in collections:
         selected_db= mongo.db[db_request]
     else:
@@ -83,7 +62,50 @@ def serve_demo_math(db_request):
         output.append({
             "state": result["stateabb"],
             "grade": result["grade"],
-            "mean_score": result["mn_all"]
+            "mean_score": result["mn_all"],
+            "mean_black": result["mn_blk"],
+            "mean_asian": result["mn_asn"],
+            "mean_hispanic": result["mn_hsp"],
+            "mean_white": result["mn_wht"],
+            "mean_male": result["mn_mal"],
+            "mean_female": result["mn_fem"]
+        })
+
+
+    return jsonify(output)
+
+@app.route("/<db_request>/<grade_filter>", methods=["GET"])
+def serve_demo_filtered(db_request, grade_filter):
+    print(f"Request made to {db_request} for {grade_filter} grade")
+    print(f"testing {db_request} {grade_filter}")
+
+    collections = mongo.db.collection_names()
+
+    if db_request in collections:
+        selected_db = mongo.db[db_request]
+    else:
+        return """
+        <h1>Error:</h1>
+        <h3>Invalid request</h3>
+        <br>
+        <span>Please make a request for a valid address</span>
+        """
+
+    output = []
+
+    results = selected_db.find({"grade": int(grade_filter)})
+
+    for result in results:
+        output.append({
+            "state": result["stateabb"],
+            "grade": result["grade"],
+            "mean_score": result["mn_all"],
+            "mean_black": result["mn_blk"],
+            "mean_asian": result["mn_asn"],
+            "mean_hispanic": result["mn_hsp"],
+            "mean_white": result["mn_wht"],
+            "mean_male": result["mn_mal"],
+            "mean_female": result["mn_fem"]
         })
 
     return jsonify(output)

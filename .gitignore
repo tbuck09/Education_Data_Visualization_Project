@@ -1,3 +1,5 @@
 .ipynb_checkpoints
 ignore_datasets
 __pycache__/
+git_merge_notes.txt
+index(report_card).html

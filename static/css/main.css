@@ -1,6 +1,11 @@
 .bottom-bar {
-    position: absolute;
+    position: relative;
     bottom: 10px;
     width: 100%;
     text-align: center;
+    background:gray;
+};
+
+.welcome {
+    background: blue;
 }
