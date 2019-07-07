@@ -1,174 +1,287 @@
-// Height and Width to be determined upon integration with the rest of the code
-var divHeight= "800"
-var divWidth= "800"
 
-// Add styles to #report-card
-d3.select("#report-card")
-    .attr("style",`
-        height: ${divHeight}px;
-        width: ${divWidth}px;
-        margin: 30px;
-        overflow:scroll;
-    `)
+var zoomRange = [-1.0, 5.0]
 
-url= "127.0.0.1:5000"
-requested_db= "ela_2013_agg"
-
-console.log(`${url}/${requested_db}`)
-
-// This section gathers d3 data and 
-// produces the report card from the given data
-
-// Requested grade initially given (this should be removed)
-var requestedGrade= 8
-
-d3.json(`/${requested_db}`).then(edData => {
-    console.log(edData);
-    
-    edData= edData.sort(function(x,y) {
-        return d3.descending(x.state,y.state)
+function buildChart(subjectSelection, gradeSelection, zoom) {
+  zoom = zoomRange
+  var baseUrl = "http://127.0.0.1:5000"
+  var requestUrl = `/${subjectSelection}/${gradeSelection}`
+  var url = baseUrl + requestUrl
+  d3.json(url).then(function (response) {
+    // console.log(response);
+    var all = ["All"]
+    var asian = ["Asian"]
+    var black = ["Black"]
+    var female = ["Female"]
+    var hispanic = ["Hispanic"]
+    var m_f_gap = []
+    var male = ["Male"]
+    var w_a_gap = []
+    var w_b_gap = []
+    var w_h_gap = []
+    var white = ["White"]
+    var state = ["State"]
+    var grade = ["Grade"]
+    Object.values(response).forEach((datum) => {
+      all.push(datum.mean_score)
+      // console.log(all)
+      asian.push(datum.mean_asian)
+      black.push(datum.mean_black)
+      female.push(datum.mean_female)
+      hispanic.push(datum.mean_hispanic)
+      m_f_gap.push(datum.mean_m_f_gap)
+      male.push(datum.mean_female)
+      w_a_gap.push(datum.mean_w_a_gap)
+      w_b_gap.push(datum.mean_w_b_gap)
+      w_h_gap.push(datum.mean_w_h_gap)
+      white.push(datum.mean_white)
+      state.push(datum.state)
+      grade.push(datum.grade)
     })
-    console.log(edData);
+    // console.log(state)
+    // console.log(asian)
+    var demographics = [
+      state,
+      white,
+      black,
+      hispanic,
+      asian
+    ]
 
-    var states= edData.state;
-    console.log(states)
-
-// Get data profile for requested grade
-    function getGradeData(requestedGrade) {
-        var gradeState= [];
-        var gradeMeans= [];
-        Object.values(edData).forEach(gradeAndState => {
-            if (gradeAndState.grade == requestedGrade){
-                gradeState.push(gradeAndState.state);
-                gradeMeans.push(gradeAndState.mean_score);
-            };
-        });
-    
-        var gradeExtent= d3.extent(gradeMeans);
-        console.log(gradeExtent);
-        return {
-            "state":gradeState,
-            "stateCount":gradeState.length,
-            "gradeMeans":gradeMeans,
-            "meanOfGradeMeans":d3.mean(gradeMeans),
-            "stdevOfGradeMeans":d3.deviation(gradeMeans),
-            "extent":(gradeExtent)};
-        };
-        
-        var gradeData= getGradeData(requestedGrade);
-        console.log(gradeData);
-        console.log(gradeData["extent"]);
-        
-// Function to assign color to value based on Normalized (0-1) mean value
-    function colorizer(score) {
-        // normalize score on 0-1 scale
-        var scoreNorm= (score - gradeData["meanOfGradeMeans"])/gradeData["stdevOfGradeMeans"];
-        // return rgb(${r},${g},${b})
-        var r= 255 - (scoreNorm * 205)
-        var g= 0 + (scoreNorm * 50)
-        var b= 0 + (scoreNorm * 255)
-        return `rgb(${r},${g},${b})`
-    };
-
-// Assign block height/width based on div size
-    function blockDimension() {
-        var n= gradeData["stateCount"];
-        var height= 
-            divHeight/n * .75;
-        var width=
-            divWidth/n * .75;
-        return {"height":height, "width":width}
+    var demoColors = {
+      White: "#003f5c",
+      Black: "#7a5195",
+      Hispanic: "#ef5675",
+      Asian: "#ffa600"
     }
-// Assign value to a variable for use below
-    var blockDim= blockDimension();
-        
-// Append svg element to appropriate <div> and assign to variable for further appendation
-    var $svg= d3
-        .select("#report-card")
-        .append("svg")
-        .attr("id","report-card-svg")
-        .attr("height", `${divHeight}px`)
-        .attr("width", `${divWidth}px`);
 
-// Append "g" to appropriate <svg> and assign to variable for further appendation
-    var $chartGroup= $svg.append("g");
+    var chart = c3.generate({
+      bindto: '#chart',
+      size: {
+        height: 500,
+        width: 800
+      },
+      data: {
+        x: "State",
+        columns: demographics,
+        type: "bar",
+        colors: demoColors,
 
-// Create Axes
-    var $xLinearScale= d3.scaleLinear()
-        .domain([
-            gradeData["extent"][0] - 5,
-            gradeData["extent"][1] + 5
-        ])
-        .range([0,divWidth]);
-    
-    var $yBandScale= d3.scaleBand()
-        .domain(['a'].concat(gradeData["state"]))
-        .range([divHeight-50,0])
+      },
+      subchart: {
+        show: true,
+        onbrush: function(domain) {
+          // console.log(domain)
+          zoomRange = domain
+          console.log(zoomRange)
+          // return zoomRange
+        }
+      },
+      width: {
+        ratio: 0.8
+      },
+      axis: {
+        x: {
+          type: "category",
 
-    var $bottomAxis= d3
-        .axisBottom($xLinearScale);
-    
-    var $leftAxis= d3
-        .axisLeft($yBandScale)
-        .tickValues(gradeData["state"]);
+        }
+      },
+      zoom: {
+        enabled: true,
+        initialRange: zoomRange //[-1, 5]
+      }
+      // bar: {
+      //     width: {
+      //         ratio: 0.5
+      //     }
+      // }
+      
+    });
+    console.log(zoomRange)
+    // return zoomRange
+  })
+  console.log(zoomRange)
+  // return zoomRange
+  
+}
 
-// Append axes
-    
-    var chartOffset= "40"
-    $chartGroup.append("g")
-        .attr("transform",`translate(${chartOffset}, ${divHeight - 50})`)
-        .call($bottomAxis);
-    
-    $chartGroup.append("g")
-        .data(edData)
-        .attr("transform", `translate(${chartOffset},0)`)
-        .attr("fill", d => colorizer(d["mean_score"]))
-        .call($leftAxis);
-    
-    var $guideLine= $chartGroup.append("g")
-        .selectAll("line")
-        .data(edData)
-        .enter()
-        .append("line")
-        .filter(d=> {return d.grade == requestedGrade})
-            .attr("x1", chartOffset)
-            .attr("x2",divWidth)
-            .attr("y1",d => $yBandScale(d["state"])+blockDim["height"]/2)
-            .attr("y2",d => $yBandScale(d["state"])+blockDim["height"]/2)
-            .attr("stroke","gray")
-            .attr("style","opacity:.5;")
+function buildMFChart(subjectSelection, gradeSelection, zoom) {
+  zoom = zoomRange
+  var baseUrl = "http://127.0.0.1:5000"
+  var requestUrl = `/${subjectSelection}/${gradeSelection}`
+  var url = baseUrl + requestUrl
+  
+  d3.json(url).then(function (response) {
+    // console.log(response);
+    var all = ["All"]
+    var female = ["Female"]
+    var male = ["Male"]
+    var state = ["State"]
+    var grade = ["Grade"]
+    Object.values(response).forEach((datum) => {
+      all.push(datum.mean_score)
+      // console.log(all)
+      female.push(datum.mean_female)
+      male.push(datum.mean_male)
+      state.push(datum.state)
+      grade.push(datum.grade)
+    })
+    // console.log(state)
+    // console.log(asian)
+    var sex = [
+      state,
+      male,
+      female
+    ]
 
-    var $gradeBlocks= $chartGroup.append("g")
-        .selectAll("rect")
-        .data(edData)
-        .enter()
-        .append("rect")
-        .filter(d=> {return d.grade == requestedGrade})
-            .attr("x", d => $xLinearScale(d["mean_score"]))
-            .attr("y", d => $yBandScale(d["state"]))
-            .attr("height", blockDim["height"].toString())
-            .attr("width", blockDim["width"].toString())
-            .attr("fill", d => colorizer(d["mean_score"]))
-            .on("mouseover", d => {
-                $tooltip.transition()
-                    .duration(200)
-                    .style("opacity", .9);
-                $tooltip.html(`<strong>${d["state"]}</strong><br>${d["mean_score"].toFixed(1)}`)
-                    .style("left", (d3.event.pageX + 10) + "px")
-                    .style("top", (d3.event.pageY - 25) + "px")
-                    .style("text-align","center")
-                    .style("background",colorizer(d["mean_score"]))
-                    .style("color", "white")
-                    .style("width","5em")
-                    .style("border-radius","10px")
-            })
-            .on("mouseout", d => {
-                $tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0)
-            });
+    var sexColors = {
+      Female: "#FF8C00",
+      Male: "#808080",
 
-    var $tooltip= d3.select("body").append("div")
-        .attr("class", "tooltip")
+    }
 
-});
+    var chart = c3.generate({
+      bindto: '#chart',
+      size: {
+        height: 500,
+        width: 800
+      },
+      data: {
+        x: "State",
+        columns: sex,
+        type: "bar",
+        colors: sexColors,
+
+      },
+      subchart: {
+        show: true,
+        onbrush: function(domain) {
+          zoomRange = domain
+          // return zoomRange
+        }
+      },
+      width: {
+        ratio: 0.8
+      },
+      axis: {
+        x: {
+          type: "category",
+
+        }
+      },
+      zoom: {
+        enabled: true,
+        initialRange: zoomRange
+      }
+      // bar: {
+      //     width: {
+      //         ratio: 0.5
+      //     }
+      // }
+    });
+    // return zoomRange
+  })
+  // return zoomRange
+}
+function init() {
+
+  var subSelector = d3.select("#selSubject")
+  var subjects = {
+    "Math": "math_2013_agg",
+    "ELA": "ela_2013_agg"
+  }
+  var gradeSelector = d3.select("#selGrade")
+  var grades = ["3", "4", "5", "6", "7", "8"]
+  var sex = [
+    "All",
+    "Male/Female"
+  ]
+
+  var sexSelector = d3.select("#selSex")
+  sex.forEach(sex => {
+    sexSelector
+      .append("option")
+      .text(sex)
+      .property("value", sex)
+
+  })
+
+  Object.entries(subjects).forEach(([subject, value]) => {
+    subSelector
+      .append("option")
+      .text(subject)
+      .property("value", value)
+  }
+  )
+  grades.forEach(grade => {
+    gradeSelector
+      .append("option")
+      .text(grade)
+      .property("value", grade)
+  })
+  
+  const firstSubject = subjects[Object.keys(subjects)[0]];
+  const firstGrade = grades[0];
+  // console.log(firstSubject)
+  buildChart(firstSubject, firstGrade, zoomRange);
+  reportCard(firstSubject,firstGrade);
+};
+
+// whiteList = ["white"]
+// stateList = ["state"]
+// for (i in response) {
+//   stateList.append(state)
+// }
+
+
+
+
+
+function subOptionChanged(newSelection, zoom) {
+  var staticGradeSelection = document.getElementById("selGrade").value
+  var staticSexSelection = document.getElementById("selSex").value
+  console.log(staticGradeSelection)
+  // buildChart(newSelection, staticGradeSelection);
+  zoom = zoomRange
+  if (document.getElementById("selSex").value == "All") {
+    buildChart(newSelection, staticGradeSelection, zoom)
+    reportCard(newSelection,staticGradeSelection)
+  }
+  else {
+    buildMFChart(newSelection, staticGradeSelection, staticSexSelection, zoom)
+    reportCard(newSelection,staticGradeSelection)
+  }
+}
+
+function gradeOptionChanged(newSelection, zoom) {
+  var staticSubSelection = document.getElementById("selSubject").value
+  console.log(staticSubSelection)
+  var staticSexSelection = document.getElementById("selSex").value
+  // buildChart(staticSubSelection, newSelection);
+  zoom = zoomRange
+  console.log(zoom)
+  if (document.getElementById("selSex").value == "All") {
+    buildChart(staticSubSelection, newSelection, zoom)
+    reportCard(staticSubSelection,newSelection)
+  }
+  else {
+    buildMFChart(staticSubSelection, newSelection, staticSexSelection, zoom)
+    reportCard(staticSubSelection,newSelection)
+  }
+}
+
+function sexOptionChanged(newSelection, zoom) {
+  var staticSubSelection = document.getElementById("selSubject").value
+  var staticGradeSelection = document.getElementById("selGrade").value
+  zoom = zoomRange
+  if (document.getElementById("selSex").value == "All") {
+    buildChart(staticSubSelection, staticGradeSelection, zoom)
+    reportCard(staticSubSelection,staticGradeSelection)
+  }
+  else {
+    buildMFChart(staticSubSelection, staticGradeSelection, newSelection, zoom)
+    reportCard(staticSubSelection,staticGradeSelection)
+  }
+}
+
+init();
+

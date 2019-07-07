@@ -24,7 +24,6 @@ app.config["MONGO_URI"]= 'mongodb://localhost:27017/seda_ed_db'
 ####################
 
 mongo= PyMongo(app)
-# mongo= PyMongo(app, uri= "mongodb://localhost:27017/seda_ed_db")
 
 
 ####################
@@ -63,7 +62,50 @@ def serve_demo_math(db_request):
         output.append({
             "state": result["stateabb"],
             "grade": result["grade"],
-            "mean_score": result["mn_all"]
+            "mean_score": result["mn_all"],
+            "mean_black": result["mn_blk"],
+            "mean_asian": result["mn_asn"],
+            "mean_hispanic": result["mn_hsp"],
+            "mean_white": result["mn_wht"],
+            "mean_male": result["mn_mal"],
+            "mean_female": result["mn_fem"]
+        })
+
+
+    return jsonify(output)
+
+@app.route("/<db_request>/<grade_filter>", methods=["GET"])
+def serve_demo_filtered(db_request, grade_filter):
+    print(f"Request made to {db_request} for {grade_filter} grade")
+    print(f"testing {db_request} {grade_filter}")
+
+    collections = mongo.db.collection_names()
+
+    if db_request in collections:
+        selected_db = mongo.db[db_request]
+    else:
+        return """
+        <h1>Error:</h1>
+        <h3>Invalid request</h3>
+        <br>
+        <span>Please make a request for a valid address</span>
+        """
+
+    output = []
+
+    results = selected_db.find({"grade": int(grade_filter)})
+
+    for result in results:
+        output.append({
+            "state": result["stateabb"],
+            "grade": result["grade"],
+            "mean_score": result["mn_all"],
+            "mean_black": result["mn_blk"],
+            "mean_asian": result["mn_asn"],
+            "mean_hispanic": result["mn_hsp"],
+            "mean_white": result["mn_wht"],
+            "mean_male": result["mn_mal"],
+            "mean_female": result["mn_fem"]
         })
 
     return jsonify(output)
