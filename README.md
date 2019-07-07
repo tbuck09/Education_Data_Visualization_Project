@@ -22,7 +22,7 @@ User will need a version of MongoDB to host data collections.
 
 * [C3](https://github.com/c3js/c3/releases/tag/v0.7.2) - The visualization library used
 * [MongoDB](https://www.mongodb.com/download-center/community) - NoSQL database
-* [Flask] (http://flask.pocoo.org/) - Server
+* [Flask](http://flask.pocoo.org/) - Server
 
 ## Versioning
 
