@@ -67,6 +67,21 @@ function buildChart(subjectSelection, gradeSelection, zoom) {
         colors: demoColors,
 
       },
+      axis: {
+        x:{ 
+          type: "category",
+        label: {
+          text: "State",
+          position: "outer-center"
+        }
+      },
+      y:{ 
+        label: {
+          text: "Mean NAEP Score",
+          position: "outer-middle"
+        }
+      }
+      },
       subchart: {
         show: true,
         onbrush: function(domain) {
@@ -78,12 +93,6 @@ function buildChart(subjectSelection, gradeSelection, zoom) {
       },
       width: {
         ratio: 0.8
-      },
-      axis: {
-        x: {
-          type: "category",
-
-        }
       },
       zoom: {
         enabled: true,
@@ -152,6 +161,21 @@ function buildMFChart(subjectSelection, gradeSelection, zoom) {
         colors: sexColors,
 
       },
+      axis: {
+        x:{ 
+          type: "category",
+        label: {
+          text: "State",
+          position: "outer-center"
+        }
+      },
+      y:{ 
+        label: {
+          text: "Mean NAEP Score",
+          position: "outer-middle"
+        }
+      }
+      },
       subchart: {
         show: true,
         onbrush: function(domain) {
@@ -161,12 +185,6 @@ function buildMFChart(subjectSelection, gradeSelection, zoom) {
       },
       width: {
         ratio: 0.8
-      },
-      axis: {
-        x: {
-          type: "category",
-
-        }
       },
       zoom: {
         enabled: true,
