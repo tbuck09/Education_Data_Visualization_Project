@@ -1,13 +1,14 @@
-
+// Set initial value for chart view
 var zoomRange = [-1.0, 5.0]
 
+// Function to build charts showing race and grade
 function buildChart(subjectSelection, gradeSelection, zoom) {
   zoom = zoomRange
   var baseUrl = "http://127.0.0.1:5000"
   var requestUrl = `/${subjectSelection}/${gradeSelection}`
   var url = baseUrl + requestUrl
   d3.json(url).then(function (response) {
-    // console.log(response);
+    
     var all = ["All"]
     var asian = ["Asian"]
     var black = ["Black"]
@@ -23,7 +24,7 @@ function buildChart(subjectSelection, gradeSelection, zoom) {
     var grade = ["Grade"]
     Object.values(response).forEach((datum) => {
       all.push(datum.mean_score)
-      // console.log(all)
+      
       asian.push(datum.mean_asian)
       black.push(datum.mean_black)
       female.push(datum.mean_female)
@@ -37,8 +38,7 @@ function buildChart(subjectSelection, gradeSelection, zoom) {
       state.push(datum.state)
       grade.push(datum.grade)
     })
-    // console.log(state)
-    // console.log(asian)
+    
     var demographics = [
       state,
       white,
@@ -53,7 +53,7 @@ function buildChart(subjectSelection, gradeSelection, zoom) {
       Hispanic: "#ef5675",
       Asian: "#ffa600"
     }
-
+// Generate chart with C3
     var chart = c3.generate({
       bindto: '#chart',
       size: {
@@ -85,10 +85,10 @@ function buildChart(subjectSelection, gradeSelection, zoom) {
       subchart: {
         show: true,
         onbrush: function(domain) {
-          // console.log(domain)
+          
           zoomRange = domain
-          console.log(zoomRange)
-          // return zoomRange
+          
+          
         }
       },
       width: {
@@ -96,23 +96,17 @@ function buildChart(subjectSelection, gradeSelection, zoom) {
       },
       zoom: {
         enabled: true,
-        initialRange: zoomRange //[-1, 5]
+        initialRange: zoomRange 
       }
-      // bar: {
-      //     width: {
-      //         ratio: 0.5
-      //     }
-      // }
+    
       
     });
-    console.log(zoomRange)
-    // return zoomRange
+    
   })
-  console.log(zoomRange)
-  // return zoomRange
+  
   
 }
-
+// Function to build chart comparing sex and grade by state
 function buildMFChart(subjectSelection, gradeSelection, zoom) {
   zoom = zoomRange
   var baseUrl = "http://127.0.0.1:5000"
@@ -120,7 +114,7 @@ function buildMFChart(subjectSelection, gradeSelection, zoom) {
   var url = baseUrl + requestUrl
   
   d3.json(url).then(function (response) {
-    // console.log(response);
+    
     var all = ["All"]
     var female = ["Female"]
     var male = ["Male"]
@@ -128,14 +122,13 @@ function buildMFChart(subjectSelection, gradeSelection, zoom) {
     var grade = ["Grade"]
     Object.values(response).forEach((datum) => {
       all.push(datum.mean_score)
-      // console.log(all)
+     
       female.push(datum.mean_female)
       male.push(datum.mean_male)
       state.push(datum.state)
       grade.push(datum.grade)
     })
-    // console.log(state)
-    // console.log(asian)
+   
     var sex = [
       state,
       male,
@@ -147,7 +140,7 @@ function buildMFChart(subjectSelection, gradeSelection, zoom) {
       Male: "#808080",
 
     }
-
+// Build chart with C3
     var chart = c3.generate({
       bindto: '#chart',
       size: {
@@ -183,35 +176,32 @@ function buildMFChart(subjectSelection, gradeSelection, zoom) {
       subchart: {
         show: true,
         onbrush: function(domain) {
-          // console.log(domain)
+         
           zoomRange = domain
-          console.log(zoomRange)
-          // return zoomRange
+         
         }
       }
-      // bar: {
-      //     width: {
-      //         ratio: 0.5
-      //     }
-      // }
+   
     });
-    // return zoomRange
+   
   })
-  // return zoomRange
-}
+ 
+};
+
+// Initialize the JS
 function init() {
 
-  var subSelector = d3.select("#selSubject")
+  var subSelector = d3.select("#selSubject");
   var subjects = {
     "Math": "math_2013_agg",
     "ELA": "ela_2013_agg"
-  }
-  var gradeSelector = d3.select("#selGrade")
-  var grades = ["3", "4", "5", "6", "7", "8"]
+  };
+  var gradeSelector = d3.select("#selGrade");
+  var grades = ["3", "4", "5", "6", "7", "8"];
   var sex = [
     "All",
     "Male/Female"
-  ]
+  ];
 
   var sexSelector = d3.select("#selSex")
   sex.forEach(sex => {
@@ -220,7 +210,7 @@ function init() {
       .text(sex)
       .property("value", sex)
 
-  })
+  });
 
   Object.entries(subjects).forEach(([subject, value]) => {
     subSelector
@@ -228,68 +218,64 @@ function init() {
       .text(subject)
       .property("value", value)
   }
-  )
+  );
   grades.forEach(grade => {
     gradeSelector
       .append("option")
       .text(grade)
       .property("value", grade)
-  })
+  });
   
   const firstSubject = subjects[Object.keys(subjects)[0]];
   const firstGrade = grades[0];
-  // console.log(firstSubject)
+
   buildChart(firstSubject, firstGrade, zoomRange);
   reportCard(firstSubject,firstGrade);
 };
 
-// whiteList = ["white"]
-// stateList = ["state"]
-// for (i in response) {
-//   stateList.append(state)
-// }
 
 
 
 
+// Functions to change chart views based on user inputs
 
 function subOptionChanged(newSelection, zoom) {
-  var staticGradeSelection = document.getElementById("selGrade").value
-  var staticSexSelection = document.getElementById("selSex").value
-  console.log(staticGradeSelection)
-  // buildChart(newSelection, staticGradeSelection);
-  zoom = zoomRange
+  var staticGradeSelection = document.getElementById("selGrade").value;
+  var staticSexSelection = document.getElementById("selSex").value;
+  
+ 
+  zoom = zoomRange;
   if (document.getElementById("selSex").value == "All") {
-    buildChart(newSelection, staticGradeSelection, zoom)
-    reportCard(newSelection,staticGradeSelection)
+    buildChart(newSelection, staticGradeSelection, zoom);
+    reportCard(newSelection,staticGradeSelection);
   }
   else {
-    buildMFChart(newSelection, staticGradeSelection, staticSexSelection, zoom)
-    reportCard(newSelection,staticGradeSelection)
+    buildMFChart(newSelection, staticGradeSelection, staticSexSelection, zoom);
+    reportCard(newSelection,staticGradeSelection);
   }
 }
 
 function gradeOptionChanged(newSelection, zoom) {
-  var staticSubSelection = document.getElementById("selSubject").value
-  console.log(staticSubSelection)
-  var staticSexSelection = document.getElementById("selSex").value
-  // buildChart(staticSubSelection, newSelection);
-  zoom = zoomRange
-  console.log(zoom)
+  var staticSubSelection = document.getElementById("selSubject").value;
+  
+  var staticSexSelection = document.getElementById("selSex").value;
+
+  zoom = zoomRange;
+
   if (document.getElementById("selSex").value == "All") {
-    buildChart(staticSubSelection, newSelection, zoom)
-    reportCard(staticSubSelection,newSelection)
+    buildChart(staticSubSelection, newSelection, zoom);
+    reportCard(staticSubSelection,newSelection);
   }
   else {
-    buildMFChart(staticSubSelection, newSelection, staticSexSelection, zoom)
-    reportCard(staticSubSelection,newSelection)
+    buildMFChart(staticSubSelection, newSelection, staticSexSelection, zoom);
+    reportCard(staticSubSelection,newSelection);
   }
-}
+};
 
 function sexOptionChanged(newSelection, zoom) {
-  var staticSubSelection = document.getElementById("selSubject").value
-  var staticGradeSelection = document.getElementById("selGrade").value
-  zoom = zoomRange
+  var staticSubSelection = document.getElementById("selSubject").value;
+  var staticGradeSelection = document.getElementById("selGrade").value;
+  zoom = zoomRange;
   if (document.getElementById("selSex").value == "All") {
     buildChart(staticSubSelection, staticGradeSelection, zoom)
     reportCard(staticSubSelection,staticGradeSelection)
@@ -298,7 +284,7 @@ function sexOptionChanged(newSelection, zoom) {
     buildMFChart(staticSubSelection, staticGradeSelection, newSelection, zoom)
     reportCard(staticSubSelection,staticGradeSelection)
   }
-}
+};
 
 init();
 
